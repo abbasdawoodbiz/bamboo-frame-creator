@@ -1,0 +1,74 @@
+<!-- Standard link tag-->
+<!-- <link rel="stylesheet" href="node_modules/figma-plugin-ds/dist/figma-plugin-ds.css"> -->
+<link rel="stylesheet" href="https://unpkg.com/figma-plugin-ds@1.0.1/dist/figma-plugin-ds.css">
+<script src="https://cdn.jsdelivr.net/gh/thomas-lowry/figma-plugin-ds/dist/iife/figma-plugin-ds.js"></script>
+<style type="text/css">
+  * {
+    padding: 4px;
+  }
+
+  .action-holder {
+    text-align: right;
+    margin-bottom: 0;
+  }
+
+  .action-holder>* {
+    display: inline-block;
+    margin-left: 8px;
+  }
+</style>
+<div>
+  <div class="onboarding-tip" style="background-color: rgb(255, 243, 168);">
+    <div class="icon icon--styles"></div>
+    <div class="onboarding-tip__msg">Easy generator for creating frames according to Bamboo guidelines</div>
+  </div>
+  <div class="input-holder">
+    <div class="section-title">Use case name</div>
+    <div class="input">
+      <input type="text" class="input__field" id="frame" placeholder="E.g. User see loan applications" />
+    </div>
+  </div>
+  <div class="input-holder">
+    <div class="section-title">Select Screen Sizes</div>
+    <div class="checkbox">
+      <input type="checkbox" id="desktop" name="screenCheckBox" value="desktop" class="checkbox__box" checked>
+      <label for="desktop" class="checkbox__label">Desktop</label>
+    </div>
+    <div class="checkbox">
+      <input type="checkbox" id="tablet" name="screenCheckBox" class="checkbox__box" value="tablet">
+      <label for="tablet" class="checkbox__label">Tablet</label>
+    </div>
+    <div class="checkbox">
+      <input type="checkbox" id="mobile" name="screenCheckBox" class="checkbox__box" value="mobile">
+      <label for="mobile" class="checkbox__label">Mobile</label>
+    </div>
+  </div>
+  <div class="action-holder">
+    <button type="button" id="cancel" class='button button--primary-destructive'>Cancel</button>
+    <button type="button" id="create-frame" class='button button--primary'>Create Frame</button>
+  </div>
+
+</div>
+
+<script>
+
+
+  document.getElementById('create-frame').onclick = () => {
+    let resolutions = [];
+    let checkedBoxes = document.querySelectorAll('input[name=screenCheckBox]:checked');
+    let useCaseName = document.getElementById('frame').value;
+
+    for (var checkbox of checkedBoxes) {
+      resolutions.push(checkbox.value);
+    }
+
+    let message = { resolutions, useCaseName };
+
+    parent.postMessage({ pluginMessage: { type: 'create-frame', data: message } }, '*')
+  }
+
+
+  document.getElementById('cancel').onclick = () => {
+    parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*')
+  }
+</script>
